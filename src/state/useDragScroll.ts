@@ -40,6 +40,8 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
     let dragging = false
     let samples: { t: number; y: number }[] = []
     let raf = 0
+    /** Set when the press landed on a list that was still moving. */
+    let arrested = false
 
     const stopGlide = () => {
       if (raf) cancelAnimationFrame(raf)
@@ -52,6 +54,9 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
       let pos = el.scrollTop
       let last = performance.now()
       const step = (now: number) => {
+        // Cleared up front and only set again when another frame is booked, so
+        // raf answers "is it still moving?" rather than "did it ever move?".
+        raf = 0
         // A dropped frame should slow the glide, not teleport it.
         const dt = Math.min(now - last, 32)
         last = now
@@ -68,7 +73,10 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
     }
 
     const onDown = (e: PointerEvent) => {
-      // Touching down stops a glide in progress, as it would on a phone.
+      // Touching down stops a glide in progress, as it would on a phone. That
+      // press was there to stop the list, so it must not also open whatever it
+      // happened to land on — noted here, acted on at release.
+      arrested = raf !== 0
       stopGlide()
       if (e.pointerType !== 'mouse' || e.button !== 0) return
       const el = e.target as HTMLElement
@@ -106,11 +114,14 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
           const v = (e.clientY - first.y) / span
           if (Math.abs(v) > MIN_VELOCITY) glide(target, v)
         }
+      }
 
-        // A drag should not also activate whatever it started on. The click
-        // (if any) is dispatched right after pointerup and before timers, so
-        // the guard is torn down on the next task either way — leaving it
-        // armed would swallow the following genuine click.
+      // Neither a drag nor a press that caught the list mid-glide was a tap, so
+      // neither should activate what it landed on. The click (if any) is
+      // dispatched right after pointerup and before timers, so the guard is
+      // torn down on the next task either way — leaving it armed would swallow
+      // the following genuine click.
+      if (dragging || arrested) {
         const swallow = (ev: MouseEvent) => {
           ev.stopPropagation()
           ev.preventDefault()
@@ -118,9 +129,11 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
         window.addEventListener('click', swallow, true)
         window.setTimeout(() => window.removeEventListener('click', swallow, true), 0)
       }
+
       document.body.classList.remove('is-drag-scrolling')
       target = null
       dragging = false
+      arrested = false
       samples = []
     }
 
