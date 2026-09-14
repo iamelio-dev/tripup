@@ -81,7 +81,7 @@ interface Store {
   openSheet: (id: SheetId) => void
   pushSheet: (id: SheetId) => void
   closeSheet: () => void
-  /** Pays off the transfers that involve you, and says so. */
+  /** Pays off what you owe, and says so. */
   settleUp: () => void
   closeAllSheets: () => void
 
@@ -466,11 +466,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
 
   /**
-   * Squares up your own debts — the transfers you are either paying or being
-   * paid. Everyone else's are theirs to make; they stay on the list.
+   * Pays off what you owe. Money owed *to* you is not yours to settle — those
+   * are other people's payments to make, and they stay on the list until they
+   * do.
    */
   const settleUp = useCallback(() => {
-    const mine = transfersRef.current.filter((t) => t.from === YOU || t.to === YOU)
+    const mine = transfersRef.current.filter((t) => t.from === YOU)
     if (mine.length === 0) return
     updateTrip((t) => ({ ...t, settlements: [...t.settlements, ...mine] }))
     closeSheet()

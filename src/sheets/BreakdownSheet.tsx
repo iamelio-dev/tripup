@@ -18,17 +18,22 @@ export function BreakdownSheet() {
 
   const mine = transfers.filter((t) => t.from === you.id || t.to === you.id)
   const others = transfers.filter((t) => t.from !== you.id && t.to !== you.id)
+  // Only what you owe is yours to pay off; being owed is the others' move.
+  const owing = transfers.filter((t) => t.from === you.id)
+  const awaited = transfers.filter((t) => t.to === you.id)
 
   return (
     <Sheet onDismiss={store.closeSheet} surface="white">
       <div className="poll-results__head">
         <h2 className="sheet-title">Breakdown</h2>
         <p className="sheet-subtitle">
-          {mine.length === 0
-            ? `Nothing left between you and the other ${trip.participants.length - 1} buddies`
-            : `${balance < 0 ? 'You owe' : 'You are owed'} ${money2(balance)} across ${
-                trip.participants.length
-              } buddies`}
+          {owing.length > 0
+            ? `You owe ${money2(balance)} across ${trip.participants.length} buddies`
+            : awaited.length > 0
+              ? `You are owed ${money2(balance)} — ${
+                  awaited.length === 1 ? 'that payment is' : 'those payments are'
+                } theirs to make`
+              : `Nothing left between you and the other ${trip.participants.length - 1} buddies`}
         </p>
       </div>
 
@@ -73,13 +78,15 @@ export function BreakdownSheet() {
         {transfers.length === 0 && <p className="sheets__empty">Everyone is settled up.</p>}
       </div>
 
-      <SheetActions>
-        {/* Only your own transfers are yours to make — everyone else's stay on
-            the list for them to settle. */}
-        <SheetButton type="accent" disabled={mine.length === 0} onClick={store.settleUp}>
-          {mine.length === 0 ? 'You are settled up' : 'Settle now'}
-        </SheetButton>
-      </SheetActions>
+      {/* Nothing to offer when the next move is someone else's: the breakdown
+          is still worth reading, it just cannot be acted on. */}
+      {owing.length > 0 && (
+        <SheetActions>
+          <SheetButton type="accent" onClick={store.settleUp}>
+            Settle now
+          </SheetButton>
+        </SheetActions>
+      )}
     </Sheet>
   )
 }

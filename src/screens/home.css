@@ -36,6 +36,11 @@
    making the list unscrollable sends the rest of that gesture nowhere, even
    once the globe has given the room back. The list stays scrollable and simply
    has its wheel events taken; see HomeScreen. */
+/* Lighter than the tertiary buttons elsewhere — it sits on the home header's
+   own surface rather than over a screen's content. */
+.home__new-trip {
+  background: var(--bg-secondary);
+}
 .home__profile {
   width: 44px;
   height: 44px;

@@ -2,6 +2,20 @@ import type { Expense, PersonId, Transfer } from '../data/types'
 
 const round = (n: number) => Math.round(n * 100) / 100
 
+/**
+ * Splits an amount into n parts that add back up to it exactly. Dividing and
+ * rounding each part leaves the group a cent or two out on anything that does
+ * not divide — a residue that never cancels, so it survives settling up and
+ * shows as a debt of a few cents that cannot be cleared. The cents that will
+ * not divide are handed out one each instead.
+ */
+function splitEvenly(amount: number, n: number): number[] {
+  const cents = Math.round(amount * 100)
+  const each = Math.trunc(cents / n)
+  const over = cents - each * n
+  return Array.from({ length: n }, (_, i) => (each + (i < over ? Math.sign(cents) : 0)) / 100)
+}
+
 /** What each person owes for a single expense. */
 export function sharesFor(expense: Expense): Record<PersonId, number> {
   const shares: Record<PersonId, number> = {}
@@ -12,15 +26,15 @@ export function sharesFor(expense: Expense): Record<PersonId, number> {
   if (expense.splitMode === 'items' && expense.items?.length) {
     for (const item of expense.items) {
       if (item.participants.length === 0) continue
-      const each = item.amount / item.participants.length
-      item.participants.forEach((id) => add(id, each))
+      const each = splitEvenly(item.amount, item.participants.length)
+      item.participants.forEach((id, i) => add(id, each[i]))
     }
     return shares
   }
 
   if (expense.participants.length === 0) return shares
-  const each = expense.amount / expense.participants.length
-  expense.participants.forEach((id) => add(id, each))
+  const each = splitEvenly(expense.amount, expense.participants.length)
+  expense.participants.forEach((id, i) => add(id, each[i]))
   return shares
 }
 
@@ -30,9 +44,9 @@ export function balances(expenses: Expense[], people: PersonId[]): Record<Person
   people.forEach((id) => (net[id] = 0))
 
   for (const expense of expenses) {
-    const perPayer = expense.amount / Math.max(expense.paidBy.length, 1)
-    expense.paidBy.forEach((id) => {
-      net[id] = round((net[id] ?? 0) + perPayer)
+    const perPayer = splitEvenly(expense.amount, Math.max(expense.paidBy.length, 1))
+    expense.paidBy.forEach((id, i) => {
+      net[id] = round((net[id] ?? 0) + perPayer[i])
     })
     const shares = sharesFor(expense)
     for (const [id, amount] of Object.entries(shares)) {

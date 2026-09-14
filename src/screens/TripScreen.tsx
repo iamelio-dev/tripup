@@ -344,6 +344,8 @@ function ExpensesTab() {
   const balance = netBalances[you.id] ?? 0
   // rounded to the cent it is shown at, so a stray fraction cannot read as a debt
   const square = Math.abs(balance) < 0.005
+  // Being owed is not something you can act on — the others have to pay.
+  const owing = balance < -0.005
 
   // Grouped by the day they were logged, newest day first, and newest entry
   // first within a day so a freshly logged expense lands at the top.
@@ -376,7 +378,7 @@ function ExpensesTab() {
           </p>
           <span className="balance-card__link">See Breakdown</span>
         </div>
-        {!square && (
+        {owing && (
           <span className="balance-card__settle">
             <SettleIcon size={18} />
             Settle now

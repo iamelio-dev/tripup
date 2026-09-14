@@ -272,7 +272,11 @@ export function HomeScreen() {
         hasNotifications={polls.some((p) => p.status === 'live')}
         actions={
           <>
-            <button type="button" className="icon-button icon-button--tertiary" aria-label="New trip">
+            <button
+              type="button"
+              className="icon-button icon-button--tertiary home__new-trip"
+              aria-label="New trip"
+            >
               <PlusThinIcon size={36} />
             </button>
             <button type="button" className="home__profile" aria-label="Profile">
