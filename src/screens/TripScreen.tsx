@@ -9,6 +9,7 @@ import { DistanceTime, EventCard, FlightCard, PollCard } from '../components/Eve
 import { SpendDonut } from '../components/SpendDonut'
 import { TransactionGroup, TransactionRow } from '../components/TransactionCard'
 import { TabBar, type TripTab } from '../components/TabBar'
+import { useArrivedByPush } from '../components/ScreenNav'
 import { SettleIcon } from '../components/Icons'
 import { SwipeToDelete } from '../components/SwipeToDelete'
 import { money, money2, sharesFor } from '../state/money'
@@ -20,12 +21,27 @@ import './trip.css'
 /** Matches the day-change fade in trip.css. */
 const DAY_SWAP_MS = 200
 
+/* Which tab this trip was last left on. Navigating away and back rebuilds the
+   screen, so held in the component this is forgotten the moment you look at a
+   notification — and forgotten again, visibly, by the copy of the screen that
+   plays the transition out. Kept against the trip, and only ever handed back
+   on the way in from somewhere deeper: opening a trip should start where a
+   trip starts, on its itinerary. */
+let lastTab: { tripId: string; tab: TripTab } | null = null
+
 /** S02 — Trip Itinerary / S03 — Trip Expenses */
 export function TripScreen() {
   const store = useStore()
   const navigate = useNavigate()
   const { tripId } = useParams()
-  const [tab, setTab] = useState<TripTab>('itinerary')
+  // A push is opening the trip; anything else is coming back to it.
+  const opening = useArrivedByPush()
+  const [tab, setTab] = useState<TripTab>(() =>
+    !opening && lastTab !== null && lastTab.tripId === tripId ? lastTab.tab : 'itinerary',
+  )
+  if (tripId && (lastTab?.tripId !== tripId || lastTab.tab !== tab)) {
+    lastTab = { tripId, tab }
+  }
   const [calendarPinned, setCalendarPinned] = useState(false)
 
   // Resolved from the route rather than read back from the store: the store is
