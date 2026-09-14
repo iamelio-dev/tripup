@@ -109,7 +109,14 @@ function ItineraryTab({
   // paints a frame without its exit already running.
   const [shown, setShown] = useState(day)
   const [leaving, setLeaving] = useState<number | null>(null)
+  /** Where the list stood before the swap, read while that is still true. */
+  const stood = useRef<{ top: number; height: number } | null>(null)
   if (shown !== day) {
+    const box = scroller.current
+    // Render runs before the DOM changes, which is the last moment the old
+    // position can be had: by the time a layout effect runs the browser has
+    // already clamped the scroll to the shorter day.
+    if (box) stood.current = { top: box.scrollTop, height: box.scrollHeight }
     setLeaving(shown)
     setShown(day)
   }
@@ -122,17 +129,66 @@ function ItineraryTab({
   // A shorter day cannot hold the scroll position. Left alone the browser
   // clamps twice — once now, and again when the outgoing copy unmounts, since
   // an absolutely positioned layer still counts towards scrollable overflow.
-  // Clamping once here, against the height the day will actually settle at,
-  // keeps it to a single move — and keeps the position untouched whenever the
-  // new day is tall enough to hold it.
+  // Working out here where the day will actually settle keeps it to a single
+  // move — and keeps the position untouched whenever the new day is tall
+  // enough to hold it.
   useLayoutEffect(() => {
     const box = scroller.current
     const tail = box?.querySelector<HTMLElement>('.trip__scroll-spacer')
+    // Not cleared after reading: React runs this effect twice in development,
+    // and the second run needs the same answer as the first. It is written
+    // afresh on every swap, and only ever read just after being written.
+    const before = stood.current
     if (!box || !tail) return
     const settled =
       tail.getBoundingClientRect().bottom - box.getBoundingClientRect().top + box.scrollTop
     const max = Math.max(0, settled - box.clientHeight)
-    if (box.scrollTop > max) box.scrollTop = max
+    const from = before ? before.top : box.scrollTop
+    if (from <= max) return
+
+    // The shorter day has already cost the list some of its height, and with it
+    // some of its scroll. The spacer gives that height back for the length of
+    // the swap so the list can start from where it stood, and the scroll is
+    // eased down instead of dropped — arriving somewhere else between one frame
+    // and the next reads as a glitch rather than a change of day.
+    // Grown until the height is actually back, rather than by the shortfall in
+    // one go: the outgoing day is absolutely positioned and overflows its
+    // stack, so for a while it is the overflow — not the content in flow —
+    // setting the scrollable height, and the first helping of spacer only
+    // brings the flow level with it. Reading the height back each pass is also
+    // what gets the last one laid out, which the scroll below is clamped
+    // against.
+    const spacer = tail.offsetHeight
+    let grown = 0
+    if (before) {
+      for (let pass = 0; pass < 3; pass += 1) {
+        const short = before.height - box.scrollHeight
+        if (short <= 0) break
+        grown += short
+        tail.style.height = `${spacer + grown}px`
+      }
+      if (grown > 0) box.scrollTop = from
+    }
+
+    let frame = 0
+    const started = performance.now()
+    const done = () => {
+      tail.style.height = ''
+    }
+    const step = (now: number) => {
+      const t = Math.min((now - started) / DAY_SWAP_MS, 1)
+      // out-cubic: leaves at once, arrives gently
+      box.scrollTop = from + (max - from) * (1 - Math.pow(1 - t, 3))
+      if (t < 1) frame = requestAnimationFrame(step)
+      // by now the list is back within the height it will keep, so letting the
+      // spacer go costs no further clamp
+      else done()
+    }
+    frame = requestAnimationFrame(step)
+    return () => {
+      cancelAnimationFrame(frame)
+      done()
+    }
   }, [day])
 
   // Decides when the strip parks under the header: the gradient grows to sit
