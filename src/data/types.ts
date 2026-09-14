@@ -90,6 +90,8 @@ export interface Trip {
   participants: PersonId[]
   events: TripEvent[]
   expenses: Expense[]
+  /** Money handed over to square up, which is not spending. */
+  settlements: Transfer[]
   status: 'current' | 'upcoming'
 }
 

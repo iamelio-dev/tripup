@@ -178,6 +178,7 @@ export const TRIPS: Trip[] = [
         end: '19:00',
       },
     ],
+    settlements: [],
     expenses: [
       {
         id: 'x-apartment',
@@ -382,6 +383,7 @@ export const TRIPS: Trip[] = [
         end: '19:25',
       },
     ],
+    settlements: [],
     expenses: [
       {
         id: 'k-flights',
@@ -497,6 +499,7 @@ export const TRIPS: Trip[] = [
         end: '19:30',
       },
     ],
+    settlements: [],
     expenses: [
       {
         id: 'l-hotel',

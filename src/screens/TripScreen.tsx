@@ -326,6 +326,8 @@ function ExpensesTab() {
   }))
 
   const balance = netBalances[you.id] ?? 0
+  // rounded to the cent it is shown at, so a stray fraction cannot read as a debt
+  const square = Math.abs(balance) < 0.005
 
   // Grouped by the day they were logged, newest day first, and newest entry
   // first within a day so a freshly logged expense lands at the top.
@@ -345,15 +347,25 @@ function ExpensesTab() {
       <button type="button" className="balance-card" onClick={() => store.openSheet('breakdown')}>
         <div className="balance-card__text">
           <p className="balance-card__headline">
-            {balance < 0 ? 'You owe ' : 'You are owed '}
-            <strong>{money(balance)}</strong>
+            {square ? (
+              <>
+                You are <strong>all square</strong>
+              </>
+            ) : (
+              <>
+                {balance < 0 ? 'You owe ' : 'You are owed '}
+                <strong>{money(balance)}</strong>
+              </>
+            )}
           </p>
           <span className="balance-card__link">See Breakdown</span>
         </div>
-        <span className="balance-card__settle">
-          <SettleIcon size={18} />
-          Settle now
-        </span>
+        {!square && (
+          <span className="balance-card__settle">
+            <SettleIcon size={18} />
+            Settle now
+          </span>
+        )}
       </button>
 
       {days.map((day) => (

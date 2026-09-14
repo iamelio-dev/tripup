@@ -10,7 +10,7 @@ import {
 } from 'react'
 import { PEOPLE, TRIPS } from '../data/seed'
 import type { Expense, Person, PersonId, Poll, Trip, TripEvent } from '../data/types'
-import { balances, consolidate, sharesFor } from './money'
+import { afterSettling, balances, consolidate, sharesFor } from './money'
 import { appNow, dayOfMonth, formatTime } from './clock'
 import { freeMapSpot } from './mapPin'
 import { EVENT_IMAGES } from '../components/EventCard'
@@ -81,6 +81,8 @@ interface Store {
   openSheet: (id: SheetId) => void
   pushSheet: (id: SheetId) => void
   closeSheet: () => void
+  /** Pays off the transfers that involve you, and says so. */
+  settleUp: () => void
   closeAllSheets: () => void
 
   toast: string | null
@@ -463,16 +465,31 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [updateTrip, notify],
   )
 
+  /**
+   * Squares up your own debts — the transfers you are either paying or being
+   * paid. Everyone else's are theirs to make; they stay on the list.
+   */
+  const settleUp = useCallback(() => {
+    const mine = transfersRef.current.filter((t) => t.from === YOU || t.to === YOU)
+    if (mine.length === 0) return
+    updateTrip((t) => ({ ...t, settlements: [...t.settlements, ...mine] }))
+    closeSheet()
+    notify('Payment settled — you are all square')
+  }, [updateTrip, closeSheet, notify])
+
   /* ---------------- derived money ---------------- */
   const netBalances = useMemo(
-    () => balances(trip.expenses, trip.participants),
-    [trip.expenses, trip.participants],
+    () => afterSettling(balances(trip.expenses, trip.participants), trip.settlements),
+    [trip.expenses, trip.participants, trip.settlements],
   )
   const totalSpent = useMemo(
     () => trip.expenses.reduce((sum, e) => sum + e.amount, 0),
     [trip.expenses],
   )
   const transfers = useMemo(() => consolidate(netBalances), [netBalances])
+  // read by settleUp, which must not be rebuilt every time a balance shifts
+  const transfersRef = useRef(transfers)
+  transfersRef.current = transfers
 
   const value: Store = {
     you: PEOPLE[YOU],
@@ -491,6 +508,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     pushSheet,
     closeSheet,
     closeAllSheets,
+    settleUp,
     toast,
     notify,
     addParticipant,

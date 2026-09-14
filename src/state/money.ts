@@ -43,6 +43,23 @@ export function balances(expenses: Expense[], people: PersonId[]): Record<Person
 }
 
 /**
+ * Money handed over to square up rather than to buy something: the payer's
+ * position rises by what they gave, the receiver's falls by what they took.
+ * Kept apart from the expenses so the trip's spending is still its spending.
+ */
+export function afterSettling(
+  net: Record<PersonId, number>,
+  settlements: Transfer[],
+): Record<PersonId, number> {
+  const out = { ...net }
+  for (const paid of settlements) {
+    out[paid.from] = round((out[paid.from] ?? 0) + paid.amount)
+    out[paid.to] = round((out[paid.to] ?? 0) - paid.amount)
+  }
+  return out
+}
+
+/**
  * Greedy settle-up: repeatedly match the biggest debtor with the biggest
  * creditor. Produces at most (n - 1) transfers instead of every pairwise debt.
  */

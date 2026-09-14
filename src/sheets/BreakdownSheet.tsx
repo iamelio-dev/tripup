@@ -24,8 +24,11 @@ export function BreakdownSheet() {
       <div className="poll-results__head">
         <h2 className="sheet-title">Breakdown</h2>
         <p className="sheet-subtitle">
-          {balance < 0 ? 'You owe ' : 'You are owed '}
-          {money2(balance)} across {trip.participants.length} buddies
+          {mine.length === 0
+            ? `Nothing left between you and the other ${trip.participants.length - 1} buddies`
+            : `${balance < 0 ? 'You owe' : 'You are owed'} ${money2(balance)} across ${
+                trip.participants.length
+              } buddies`}
         </p>
       </div>
 
@@ -39,8 +42,10 @@ export function BreakdownSheet() {
                 {PEOPLE[id].name}
                 {id === you.id && <span className="balance-row__you">You</span>}
               </span>
-              <span className={`balance-row__value${value >= 0 ? ' is-credit' : ''}`}>
-                {value >= 0 ? '+' : '−'} {money2(value)}
+              <span className={`balance-row__value${value > 0.005 ? ' is-credit' : ''}`}>
+                {/* nobody is owed nothing — a settled row carries no sign */}
+                {Math.abs(value) < 0.005 ? '' : value > 0 ? '+ ' : '− '}
+                {money2(value)}
               </span>
             </div>
           )
@@ -69,11 +74,10 @@ export function BreakdownSheet() {
       </div>
 
       <SheetActions>
-        <SheetButton
-          type="accent"
-          onClick={() => store.notify('Settling up is out of scope for this prototype')}
-        >
-          Settle now
+        {/* Only your own transfers are yours to make — everyone else's stay on
+            the list for them to settle. */}
+        <SheetButton type="accent" disabled={mine.length === 0} onClick={store.settleUp}>
+          {mine.length === 0 ? 'You are settled up' : 'Settle now'}
         </SheetButton>
       </SheetActions>
     </Sheet>
