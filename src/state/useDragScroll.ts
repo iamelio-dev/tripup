@@ -1,4 +1,5 @@
 import { useEffect, type RefObject } from 'react'
+import { swallowNextClick } from './swallowClick'
 
 /** Elements that own their own pointer gestures or need a text caret. */
 const IGNORE =
@@ -116,19 +117,8 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
         }
       }
 
-      // Neither a drag nor a press that caught the list mid-glide was a tap, so
-      // neither should activate what it landed on. The click (if any) is
-      // dispatched right after pointerup and before timers, so the guard is
-      // torn down on the next task either way — leaving it armed would swallow
-      // the following genuine click.
-      if (dragging || arrested) {
-        const swallow = (ev: MouseEvent) => {
-          ev.stopPropagation()
-          ev.preventDefault()
-        }
-        window.addEventListener('click', swallow, true)
-        window.setTimeout(() => window.removeEventListener('click', swallow, true), 0)
-      }
+      // Neither a drag nor a press that caught the list mid-glide was a tap.
+      if (dragging || arrested) swallowNextClick()
 
       document.body.classList.remove('is-drag-scrolling')
       target = null

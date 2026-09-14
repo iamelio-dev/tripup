@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import { useIsLeavingScreen } from '../components/ScreenNav'
+import { swallowNextClick } from '../state/swallowClick'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../state/store'
 import { BuddiesPreview } from '../components/Avatar'
@@ -27,6 +28,8 @@ const PULL_SNAP = 0.5
 const PULL_FLICK = 0.35
 /** Only the last moments of the drag count towards the throw. */
 const PULL_WINDOW = 100
+/** Movement up to here is a tap on the card, beyond it a swipe at the globe. */
+const PULL_TAP = 4
 /** Matches the settle in home.css, so the list stays parked until it lands. */
 const SNAP_MS = 380
 
@@ -188,6 +191,11 @@ export function HomeScreen() {
       if (!pulling) return
       pulling = false
       snap(settle(e.timeStamp))
+      // The list is parked while the globe is open, so useDragScroll is not
+      // watching and cannot excuse this one: a swipe that puts the globe away
+      // ends over the card resting at the bottom, and would open that trip.
+      // A press that never moved is still a tap, and still should.
+      if (Math.abs(e.clientY - startY) > PULL_TAP) swallowNextClick()
     }
 
     // The same swipe from a wheel, which has no release of its own — a lull in
