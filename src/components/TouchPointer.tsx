@@ -31,7 +31,11 @@ export function TouchPointer({ within }: { within: RefObject<HTMLElement | null>
       const inside =
         e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom
       // Moved before it is shown, so it never fades in at the last place it was.
-      if (inside) el.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
+      // The translate property, not transform: individual transform properties
+      // are applied translate -> rotate -> scale, so the press scales about the
+      // point it has already moved to. Through transform it would be the other
+      // way round, and the press would scale the position too.
+      if (inside) el.style.translate = `${e.clientX}px ${e.clientY}px`
       show(inside)
     }
     const down = (e: PointerEvent) => {

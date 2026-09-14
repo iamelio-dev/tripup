@@ -22,7 +22,9 @@
   opacity: 0;
   /* above the phone and its frame */
   z-index: 100;
-  /* scale rather than transform: the position owns that */
+  /* the position is carried by translate, so scale is free to be its own
+     property and compose after it rather than before */
+  translate: 0 0;
   scale: 1;
   transition:
     opacity 0.12s var(--ease),
