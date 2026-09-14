@@ -3,7 +3,7 @@ import { swallowNextClick } from './swallowClick'
 
 /** Elements that own their own pointer gestures or need a text caret. */
 const IGNORE =
-  'input, textarea, select, [contenteditable], .wheel, .poll-option__handle, .home__globe, .home__globe-space'
+  'input, textarea, select, [contenteditable], .wheel, .poll-option__handle, .home__globe, .home__globe-space, .home--hero .home__scroll'
 
 /** Velocity decay per 16.67ms frame — roughly how iOS sheds a flick. */
 const FRICTION = 0.94

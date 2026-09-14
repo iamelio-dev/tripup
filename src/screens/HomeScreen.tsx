@@ -203,6 +203,12 @@ export function HomeScreen() {
     let wheeled = 0
     let lull = 0
     const onWheel = (e: WheelEvent) => {
+      // The class is on for exactly as long as the globe has the room: open,
+      // mid-swipe, or on its way back. Taking the event rather than making the
+      // list unscrollable keeps the browser's wheel gesture pointed at the
+      // list, so the moment the globe lets go the same gesture scrolls it.
+      if (!root.classList.contains('home--hero')) return
+      e.preventDefault()
       if (settled === 0) return
       wheeled -= e.deltaY
       const next = clamp(1 + wheeled / travel)
@@ -235,7 +241,7 @@ export function HomeScreen() {
 
     box.addEventListener('scroll', onScroll, { passive: true })
     box.addEventListener('pointerdown', onDown)
-    box.addEventListener('wheel', onWheel, { passive: true })
+    box.addEventListener('wheel', onWheel, { passive: false })
     window.addEventListener('pointermove', onPull, { passive: false })
     window.addEventListener('pointerup', onRelease)
     window.addEventListener('pointercancel', onRelease)

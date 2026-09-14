@@ -31,10 +31,11 @@
   transition: none;
 }
 /* While the globe has the room — open, mid-swipe or on its way back — the list
-   is parked, so the gesture cannot be read as a scroll as well. */
-.home--hero .home__scroll {
-  overflow: hidden;
-}
+   must not scroll as well. It is held off in JS rather than with overflow:
+   the browser picks the target for a wheel gesture when the gesture starts, so
+   making the list unscrollable sends the rest of that gesture nowhere, even
+   once the globe has given the room back. The list stays scrollable and simply
+   has its wheel events taken; see HomeScreen. */
 .home__profile {
   width: 44px;
   height: 44px;
