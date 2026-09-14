@@ -7,8 +7,8 @@ import './event-card.css'
 /** Event photography, keyed by an event's `image`. Shared so a map pin and the
  *  card it belongs to always show the same picture. */
 export const EVENT_IMAGES: Record<string, string> = {
-  maat: '/assets/event-maat.png',
-  tram: '/assets/event-tram.png',
+  maat: '/assets/event-maat.jpg',
+  tram: '/assets/event-tram.jpg',
   restaurant: '/assets/event-restaurant.jpg',
   'casa-da-bica': '/assets/event-casa-da-bica.jpg',
   'santa-luzia': '/assets/event-santa-luzia.jpg',

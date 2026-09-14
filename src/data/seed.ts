@@ -36,8 +36,8 @@ export const TRIP_DAYS = [
 /** Pin photography, still shared across trips until each place has its own. */
 const PIN_ART = {
   restaurant: '/assets/event-restaurant.jpg',
-  maat: '/assets/event-maat.png',
-  tram: '/assets/event-tram.png',
+  maat: '/assets/event-maat.jpg',
+  tram: '/assets/event-tram.jpg',
 }
 
 export const TRIPS: Trip[] = [
@@ -49,7 +49,7 @@ export const TRIPS: Trip[] = [
     endDate: '2026-04-26',
     days: TRIP_DAYS,
     coords: [38.72, -9.14],
-    map: '/assets/map-lisbon.png',
+    map: '/assets/map-lisbon.jpg',
     mapPins: [
       { image: PIN_ART.restaurant, left: 70, top: 111 },
       { image: PIN_ART.maat, left: 132, top: 55 },
@@ -296,7 +296,7 @@ export const TRIPS: Trip[] = [
     startDate: '2026-08-14',
     endDate: '2026-08-28',
     coords: [36.89, 27.29],
-    map: '/assets/map-kos.png',
+    map: '/assets/map-kos.jpg',
     mapPins: [
       { image: PIN_ART.restaurant, left: 46, top: 170 },
       { image: PIN_ART.maat, left: 158, top: 60 },
@@ -419,7 +419,7 @@ export const TRIPS: Trip[] = [
     startDate: '2026-10-02',
     endDate: '2026-10-06',
     coords: [51.51, -0.13],
-    map: '/assets/map-london.png',
+    map: '/assets/map-london.jpg',
     mapPins: [
       { image: PIN_ART.restaurant, left: 92, top: 128 },
       { image: PIN_ART.maat, left: 238, top: 56 },
