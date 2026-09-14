@@ -12,7 +12,7 @@ import { TabBar, type TripTab } from '../components/TabBar'
 import { useArrivedByPush } from '../components/ScreenNav'
 import { SettleIcon } from '../components/Icons'
 import { SwipeToDelete } from '../components/SwipeToDelete'
-import { money, money2, sharesFor } from '../state/money'
+import { SETTLED_UNDER, inRoundMoney, money, money2, sharesFor } from '../state/money'
 import { appNow, dayOfMonth } from '../state/clock'
 import type { TripEvent } from '../data/types'
 import { SheetHost } from '../sheets/SheetHost'
@@ -343,9 +343,9 @@ function ExpensesTab() {
 
   const balance = netBalances[you.id] ?? 0
   // rounded to the cent it is shown at, so a stray fraction cannot read as a debt
-  const square = Math.abs(balance) < 0.005
+  const square = Math.abs(balance) < SETTLED_UNDER
   // Being owed is not something you can act on — the others have to pay.
-  const owing = balance < -0.005
+  const owing = balance <= -SETTLED_UNDER
 
   // Grouped by the day they were logged, newest day first, and newest entry
   // first within a day so a freshly logged expense lands at the top.
@@ -372,7 +372,7 @@ function ExpensesTab() {
             ) : (
               <>
                 {balance < 0 ? 'You owe ' : 'You are owed '}
-                <strong>{money(balance)}</strong>
+                <strong>{money(inRoundMoney(balance))}</strong>
               </>
             )}
           </p>

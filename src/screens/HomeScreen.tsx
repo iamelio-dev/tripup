@@ -274,7 +274,7 @@ export function HomeScreen() {
           <>
             <button
               type="button"
-              className="icon-button icon-button--tertiary home__new-trip"
+              className="icon-button icon-button--light"
               aria-label="New trip"
             >
               <PlusThinIcon size={36} />

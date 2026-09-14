@@ -2,7 +2,7 @@ import { Sheet, SheetActions, SheetButton, SheetDivider } from '../components/Sh
 import { Avatar } from '../components/Avatar'
 import { ChevronIcon } from '../components/Icons'
 import { PEOPLE } from '../data/seed'
-import { money2, pairwiseTransferCount } from '../state/money'
+import { SETTLED_UNDER, inRoundMoney, money2, pairwiseTransferCount } from '../state/money'
 import { useStore } from '../state/store'
 import './sheets.css'
 
@@ -28,9 +28,9 @@ export function BreakdownSheet() {
         <h2 className="sheet-title">Breakdown</h2>
         <p className="sheet-subtitle">
           {owing.length > 0
-            ? `You owe ${money2(balance)} across ${trip.participants.length} buddies`
+            ? `You owe ${money2(inRoundMoney(balance))} across ${trip.participants.length} buddies`
             : awaited.length > 0
-              ? `You are owed ${money2(balance)} — ${
+              ? `You are owed ${money2(inRoundMoney(balance))} — ${
                   awaited.length === 1 ? 'that payment is' : 'those payments are'
                 } theirs to make`
               : `Nothing left between you and the other ${trip.participants.length - 1} buddies`}
@@ -47,10 +47,12 @@ export function BreakdownSheet() {
                 {PEOPLE[id].name}
                 {id === you.id && <span className="balance-row__you">You</span>}
               </span>
-              <span className={`balance-row__value${value > 0.005 ? ' is-credit' : ''}`}>
+              <span
+                className={`balance-row__value${value >= SETTLED_UNDER ? ' is-credit' : ''}`}
+              >
                 {/* nobody is owed nothing — a settled row carries no sign */}
-                {Math.abs(value) < 0.005 ? '' : value > 0 ? '+ ' : '− '}
-                {money2(value)}
+                {Math.abs(value) < SETTLED_UNDER ? '' : value > 0 ? '+ ' : '− '}
+                {money2(inRoundMoney(value))}
               </span>
             </div>
           )

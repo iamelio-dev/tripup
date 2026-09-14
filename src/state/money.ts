@@ -74,15 +74,26 @@ export function afterSettling(
 }
 
 /**
+ * Below this a position counts as square. Chasing the last few cents around a
+ * group is noise — nobody is handing over three pence — and it is what left a
+ * debt too small to be worth paying but too big to disappear.
+ */
+export const SETTLED_UNDER = 0.1
+
+/** Payments are made in round money, not to the cent — and so a balance is
+ *  read in the money it would actually be settled in. */
+export const inRoundMoney = (n: number) => Math.round(n * 10) / 10
+
+/**
  * Greedy settle-up: repeatedly match the biggest debtor with the biggest
  * creditor. Produces at most (n - 1) transfers instead of every pairwise debt.
  */
 export function consolidate(net: Record<PersonId, number>): Transfer[] {
   const creditors = Object.entries(net)
-    .filter(([, v]) => v > 0.005)
+    .filter(([, v]) => v >= SETTLED_UNDER)
     .map(([id, v]) => ({ id, amount: v }))
   const debtors = Object.entries(net)
-    .filter(([, v]) => v < -0.005)
+    .filter(([, v]) => v <= -SETTLED_UNDER)
     .map(([id, v]) => ({ id, amount: -v }))
 
   creditors.sort((a, b) => b.amount - a.amount)
@@ -92,12 +103,15 @@ export function consolidate(net: Record<PersonId, number>): Transfer[] {
   let c = 0
   let d = 0
   while (c < creditors.length && d < debtors.length) {
-    const amount = round(Math.min(creditors[c].amount, debtors[d].amount))
-    if (amount > 0.005) transfers.push({ from: debtors[d].id, to: creditors[c].id, amount })
-    creditors[c].amount = round(creditors[c].amount - amount)
-    debtors[d].amount = round(debtors[d].amount - amount)
-    if (creditors[c].amount <= 0.005) c += 1
-    if (debtors[d].amount <= 0.005) d += 1
+    const matched = round(Math.min(creditors[c].amount, debtors[d].amount))
+    // Handed over in round money, but matched off at its true size so the
+    // rounding cannot accumulate across the chain.
+    const amount = inRoundMoney(matched)
+    if (amount >= SETTLED_UNDER) transfers.push({ from: debtors[d].id, to: creditors[c].id, amount })
+    creditors[c].amount = round(creditors[c].amount - matched)
+    debtors[d].amount = round(debtors[d].amount - matched)
+    if (creditors[c].amount < SETTLED_UNDER) c += 1
+    if (debtors[d].amount < SETTLED_UNDER) d += 1
   }
   return transfers
 }
