@@ -127,12 +127,19 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
       samples = []
     }
 
+    // Belt and braces for the browsers that do not honour -webkit-user-drag:
+    // a native image drag would take the pointer mid-gesture and leave the
+    // scroll or swipe stuck halfway.
+    const onDragStart = (e: DragEvent) => e.preventDefault()
+
+    root.addEventListener('dragstart', onDragStart)
     root.addEventListener('pointerdown', onDown)
     window.addEventListener('pointermove', onMove, { passive: false })
     window.addEventListener('pointerup', onUp)
     window.addEventListener('pointercancel', onUp)
     return () => {
       stopGlide()
+      root.removeEventListener('dragstart', onDragStart)
       root.removeEventListener('pointerdown', onDown)
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup', onUp)

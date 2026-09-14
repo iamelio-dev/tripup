@@ -5,6 +5,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Peeling a photo off the screen and carrying it about is a web page's
+   behaviour, not a phone's — and here it interrupts a drag-scroll or a swipe
+   halfway through. The dragstart guard in useDragScroll covers the browsers
+   that ignore this. */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 html,
 body,
 #root {
