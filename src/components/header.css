@@ -1,0 +1,100 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 65px;
+  flex: none;
+}
+.header__leading {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.header__leading .t-hero {
+  white-space: nowrap;
+}
+.header__title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* title sits 2px higher than the Figma measurement; the shallow bottom
+     padding pulls the subtitle up close under it */
+  padding: 4px 0 3px;
+}
+.header__back {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 33px;
+  color: var(--text-primary);
+  flex: none;
+  /* The title row is raised so the trip name's ink lands where Figma puts it.
+     The back icon is not part of that correction, so it comes back down —
+     this restores Figma's 3px offset between the icon and the title. */
+  position: relative;
+  top: 3px;
+}
+.header__dates {
+  margin: -4px 0 0;
+  white-space: nowrap;
+  letter-spacing: -0.019em;
+  /* Figma sets 150% line-height on every text style */
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.header__dates--small {
+  font-size: var(--size-label);
+  font-weight: 500;
+}
+.header__dates--large {
+  font-size: var(--size-title);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #a6a29b;
+}
+.header__trailing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 2px;
+  flex: 0 0 auto;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  flex: none;
+  color: var(--text-primary);
+}
+.icon-button--light {
+  background: var(--bg-secondary);
+}
+.icon-button--tertiary {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+.icon-button:active {
+  transform: scale(0.94);
+}
+
+/* unread dot on the bell */
+.icon-button.has-badge {
+  position: relative;
+}
+.icon-button.has-badge::after {
+  content: '';
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--button-accent);
+  border: 2px solid var(--bg-secondary);
+}

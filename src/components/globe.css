@@ -1,0 +1,74 @@
+/* Registered so it can be transitioned — a plain custom property cannot be. */
+@property --globe-hero {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.home__globe {
+  position: absolute;
+  /* sits above the list at rest; pulled open it centres in the band between
+     the header and the card that has come to rest on the bottom */
+  top: calc(
+    var(--globe-top-base) +
+      (var(--globe-top-hero, var(--globe-top-base)) - var(--globe-top-base)) * var(--globe-hero)
+  );
+  left: 50%;
+  width: 520px;
+  height: 520px;
+  /* Scrolling the trips up shrinks the globe away behind them — see HomeScreen.
+     The origin sits high so the visible cap stays put as it shrinks. */
+  /* the scroll fade and the pull each have their say on the size */
+  transform: translateX(-50%) scale(calc(var(--globe-scale, 1) * (1 - 0.1 * var(--globe-hero))));
+  /* shrinks towards the visible cap at rest, towards its own middle once open */
+  transform-origin: 50% calc(30% + 20% * var(--globe-hero));
+  opacity: var(--globe-fade, 1);
+  /* once it has faded it must not keep catching drags meant for the list */
+  pointer-events: var(--globe-hits, auto);
+  /* At rest it fades away before it reaches the cards. Pulled open it opens up
+     to 90% — the sphere occupies the middle 80% of the canvas, so that holds it
+     whole and softens only the empty margin beneath it. */
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 calc(40% + 50% * var(--globe-hero)),
+    transparent calc(74% + 26% * var(--globe-hero))
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 calc(40% + 50% * var(--globe-hero)),
+    transparent calc(74% + 26% * var(--globe-hero))
+  );
+}
+.home__globe-canvas {
+  display: block;
+  /* the globe owns its drags, so the page must not scroll underneath it */
+  touch-action: none;
+  cursor: grab;
+}
+.home__globe-canvas:active {
+  cursor: grabbing;
+}
+
+/* The itinerary map's picture tile, dropped onto the globe — no pointer or dot,
+   just the photo centred on its coordinate. Positioned every frame from the
+   projection, so it keeps its size whatever the globe is doing. */
+.globe-pin {
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease);
+  will-change: transform;
+}
+.globe-pin .map-pin__tile {
+  height: 36px;
+  /* the map's 7.5 radius and 2.5 border, scaled with the tile */
+  border-radius: 9px;
+}
+.globe-pin .map-pin__tile img {
+  border-radius: 9px;
+  border-width: 3px;
+}

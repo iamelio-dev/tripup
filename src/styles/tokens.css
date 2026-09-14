@@ -1,0 +1,77 @@
+/* Design tokens — mirrored from Figma "05 — DESIGN SYSTEM" variables */
+:root {
+  /* Background */
+  --bg-primary: #e9e6e1;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f2f2f2;
+  /* Add sheet tiles. Figma draws these grey but binds no variable to the fill,
+     so this is the one surface colour without a counterpart in the palette. */
+  --surface-tile: #d9d9d9;
+
+  /* Text colour */
+  --text-primary: #131313;
+  --text-secondary: #5d5b56;
+  --text-on-accent: #ffffff;
+
+  /* Buttons */
+  --button-accent: #c95e42;
+  --button-accent-disabled: rgba(201, 94, 66, 0.5);
+  --button-accent-selected: rgba(201, 94, 66, 0.5);
+  --button-accent-selected-disabled: rgba(201, 94, 66, 0.1);
+  --button-add: rgba(19, 19, 19, 0.9);
+  /* destructive action — iOS convention, not in the Figma palette */
+  --button-destructive: #d64541;
+
+  /* Text sizes */
+  --size-hero: 34px;
+  --size-title: 25px;
+  --size-body: 18px;
+  --size-label-large: 16px;
+  --size-label: 12px;
+
+  /* Radii */
+  --radius-sheet: 28px;
+  --radius-card: 24px;
+  --radius-surface: 20px;
+  --radius-field: 16px;
+  --radius-row: 12px;
+  --radius-pill: 999px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Layout */
+  --screen-width: 393px;
+  --screen-height: 852px;
+  --gutter: 16px;
+  /* first row clear of the status bar — the Dynamic Island ends at ~49px */
+  --safe-top: 60px;
+  /* status bar inset + header: the band the scroll runs underneath.
+     Home overrides it — its year subtitle makes the header taller. */
+  --header-stack: 125px;
+  /* how far the header gradient takes to fade out. It ends where resting
+     content begins, so the fade runs up across the header's lower edge. */
+  --scrim-fade: 30px;
+  /* floor shared by every sheet — matches Search Buddy */
+  --sheet-min-height: 378px;
+
+  /* Elevation */
+  --shadow-card: 0 2px 12px rgba(19, 19, 19, 0.06);
+  --shadow-sheet: 0 -8px 40px rgba(19, 19, 19, 0.16);
+  --shadow-float: 0 6px 20px rgba(19, 19, 19, 0.18);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* iOS navigation curve: quick off the mark, long settle */
+  --nav-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --nav-duration: 0.38s;
+  /* how far a screen travels — one screen width */
+  --nav-shift: var(--screen-width);
+  /* the screen behind covers a fraction of that: the parallax */
+  --nav-back: calc(var(--nav-shift) * 0.28);
+}

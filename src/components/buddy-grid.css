@@ -1,0 +1,40 @@
+.buddy-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px 8px;
+}
+.buddy-grid__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+/*
+ * The selection ring is an outline rather than a border: outlines sit outside
+ * the box and take no layout space, so the ring stays concentric with the
+ * avatar and nothing shifts when it appears.
+ */
+.buddy-grid__avatar {
+  display: inline-flex;
+  border-radius: var(--radius-pill);
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.18s var(--ease);
+}
+/* Only a grid that asks for a choice shows the selection ring. */
+.buddy-grid__item:not(.is-static).is-selected .buddy-grid__avatar {
+  outline-color: var(--button-accent);
+}
+.buddy-grid__name {
+  font-size: var(--size-label);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+  color: var(--text-secondary);
+}
+.buddy-grid__item.is-selected .buddy-grid__name {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.buddy-grid__item:not(.is-static):active .buddy-grid__avatar {
+  transform: scale(0.95);
+}

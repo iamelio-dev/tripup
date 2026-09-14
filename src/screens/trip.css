@@ -1,0 +1,152 @@
+.trip {
+  gap: 16px;
+  /* Clearance for the floating header. Lives on the scroll box rather than on
+     the map, which only some trips have — without one the calendar and events
+     slid up underneath the header. */
+  --trip-lead: calc(var(--header-stack) + 16px);
+}
+.trip__map {
+  flex: none;
+}
+
+/* Map, calendar and events scroll as one; the calendar stops under the header. */
+.trip__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* full-bleed box so the swipe rows inside are not clipped at the gutter */
+  margin: 0 -16px;
+  padding: var(--trip-lead) 16px 0;
+}
+.trip__calendar {
+  position: sticky;
+  /* A sticky offset is measured from the container's content edge, which the
+     lead padding has already pushed down — so back that off to park the strip
+     at the header's lower edge. */
+  top: calc(var(--header-stack) - var(--trip-lead));
+  /* above the gradient, below the header */
+  z-index: 5;
+  flex: none;
+}
+/* Once parked, the strip leaves the scroller's coordinate space and hangs off
+   the screen instead. A rubber-band shifts the scroller's contents without
+   changing scrollTop, so a sticky strip would ride up with the bounce and slide
+   under the header; anchored to the screen it simply cannot. */
+.trip--itinerary.is-calendar-pinned .trip__calendar {
+  position: absolute;
+  top: var(--header-stack);
+  left: 16px;
+  right: 16px;
+}
+/* Holds the strip's place in the flow while it is anchored. display:none when
+   unpinned so it contributes no flex gap of its own. */
+.trip__calendar-spacer {
+  display: none;
+}
+.trip--itinerary.is-calendar-pinned .trip__calendar-spacer {
+  display: block;
+  height: 73px;
+  flex: none;
+}
+/* Once the strip parks under the header the screen's gradient grows to sit
+   behind it, so nothing shows through the gap between the two. Until then it
+   stays short and leaves resting content untouched. */
+.trip--itinerary.is-calendar-pinned {
+  /* Same overhang the header gets (16px past its bottom edge), so the ramp
+     below the strip reads identically — most of the fade sits behind the
+     strip itself rather than trailing below it. */
+  --scrim-height: calc(var(--header-stack) + 73px + 16px);
+}
+/* Switching day: the old plan fades out over the top while the new one fades
+   in underneath. Same 0.2s as the calendar, so the day change resolves as one. */
+.trip__events-stack {
+  position: relative;
+  flex: none;
+}
+.trip__events {
+  animation: day-events-in 0.2s var(--ease) both;
+}
+.trip__events--leaving {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  animation: day-events-out 0.2s var(--ease) both;
+  pointer-events: none;
+}
+@keyframes day-events-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes day-events-out {
+  to {
+    opacity: 0;
+  }
+}
+.trip__events,
+.trip__expenses {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 -16px;
+  padding: 0 16px;
+  flex: none;
+}
+.trip__event {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: none;
+}
+.trip__empty {
+  margin: 28px 0;
+  text-align: center;
+  font-size: var(--size-label-large);
+  color: var(--text-secondary);
+}
+.trip__scroll-spacer {
+  height: 110px;
+  flex: none;
+}
+
+
+.balance-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border-radius: 36px;
+  padding: 18px 18px 18px 24px;
+  text-align: left;
+  flex: none;
+}
+.balance-card__headline {
+  margin: 0;
+  font-size: var(--size-title);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--text-secondary);
+}
+.balance-card__headline strong {
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.balance-card__link {
+  font-size: var(--size-label);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.balance-card__settle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-pill);
+  padding: 12px 16px;
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex: none;
+}

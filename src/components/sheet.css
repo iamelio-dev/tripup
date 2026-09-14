@@ -1,0 +1,246 @@
+.sheet-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.sheet-layer.is-stacked {
+  z-index: 30;
+}
+.sheet-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(19, 19, 19, 0.35);
+  animation: dim-in 0.22s var(--ease);
+}
+.sheet-layer.is-stacked .sheet-dim {
+  background: rgba(19, 19, 19, 0.28);
+}
+/* the dim is already there during a step change — don't flash it again */
+.sheet-layer:has(.sheet.is-swapping) .sheet-dim {
+  animation: none;
+}
+@keyframes dim-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.sheet {
+  position: relative;
+  /* 6px inset on the sides and the bottom, so the sheet floats off the frame */
+  margin: 0 6px 6px;
+  min-height: var(--sheet-min-height);
+  max-height: calc(100% - 90px);
+  border-radius: 34px 34px 50px 50px;
+  /* Figma hi-fi: 18px above the content, with the handle sitting above it */
+  padding: 18px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  animation: sheet-in 0.3s var(--ease);
+  box-shadow: var(--shadow-sheet);
+}
+.sheet::-webkit-scrollbar {
+  display: none;
+}
+/* Over-scrolling a sheet must not chain out and bounce the device frame. */
+.sheet {
+  overscroll-behavior: contain;
+}
+
+/* The footer must sit above the dim, which is absolutely positioned and would
+   otherwise cover it — swallowing taps and tinting the keys. */
+.sheet-footer {
+  position: relative;
+  z-index: 1;
+  flex: none;
+}
+
+/* A footer (the keyboard) sits flush against the device edge, so the sheet
+   drops its bottom inset and rests directly on top of it. */
+.sheet-layer.has-footer .sheet {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.sheet--white {
+  background: var(--bg-secondary);
+}
+.sheet--tertiary {
+  background: var(--bg-tertiary);
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+/* Drag-to-dismiss: the surface tracks the finger, and springs back on release
+   unless the drag went far enough to close. */
+.sheet,
+.sheet-footer {
+  transform: translateY(var(--sheet-drag, 0px));
+  transition: transform 0.26s var(--ease);
+}
+.sheet-layer.is-dragging .sheet,
+.sheet-layer.is-dragging .sheet-footer {
+  transition: none;
+}
+
+/* Closing is the entrance run backwards, picking up from the drag offset so a
+   swipe flows straight into it instead of snapping back first. */
+.sheet-layer.is-closing .sheet,
+.sheet-layer.is-closing .sheet-footer {
+  transform: translateY(calc(var(--sheet-drag, 0px) + 24px));
+  opacity: 0;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+.sheet-layer.is-closing .sheet-dim {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+/* Moving between steps of a flow: the surface stays put and only what is
+   inside it cross-fades, so the sheet reads as one continuous panel. */
+.sheet.is-swapping {
+  animation: none;
+}
+.sheet.is-swapping > *:not(.sheet__grabber) {
+  animation: sheet-content-in 0.22s var(--ease);
+}
+@keyframes sheet-content-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Figma hi-fi: 60 x 4 rounded line, centred, 9px from the sheet top,
+   Text/Colour/Secondary at 25%. */
+.sheet__grabber {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(93, 91, 86, 0.25);
+}
+
+/* ---- Sheet header ---- */
+.sheet-title {
+  font-size: var(--size-title);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 0;
+}
+.sheet-subtitle {
+  margin: 4px 0 0;
+  font-size: var(--size-label-large);
+  font-weight: 400;
+  letter-spacing: -0.019em;
+  color: #717171;
+}
+.sheet-heading {
+  margin: 0;
+  font-size: var(--size-body);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+
+/* ---- Buttons ---- */
+.sheet-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+.sheet-button {
+  flex: 1;
+  min-height: 60px;
+  border-radius: 33px;
+  display: grid;
+  place-items: center;
+  padding: 16px 20px;
+  font-size: var(--size-body);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  color: #fff;
+  transition: transform 0.14s var(--ease), background 0.18s var(--ease);
+}
+.sheet-button--default {
+  background: var(--text-primary);
+}
+.sheet-button--accent {
+  background: var(--button-accent);
+}
+.sheet-button--ghost {
+  background: rgba(19, 19, 19, 0.12);
+  color: var(--text-secondary);
+}
+.sheet-button.is-disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.sheet-button--ghost.is-disabled {
+  opacity: 1;
+}
+.sheet-button:not(.is-disabled):active {
+  transform: scale(0.97);
+}
+
+/* ---- Divider with label ---- */
+.sheet-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sheet-divider__rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(19, 19, 19, 0.35);
+}
+.sheet-divider__label {
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ---- Shared sheet bits ---- */
+.sheet-field {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-field);
+  padding: 16px 18px;
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  width: 100%;
+}
+.sheet-field::placeholder {
+  color: #9b9890;
+}
+.sheet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-field);
+  padding: 16px 18px;
+  font-size: var(--size-label-large);
+  width: 100%;
+}
+.sheet-row__label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.sheet-row__value {
+  font-weight: 700;
+  color: var(--text-primary);
+}

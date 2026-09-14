@@ -1,0 +1,46 @@
+.spend-donut {
+  position: relative;
+  /* tall enough for the orbit (135) plus an avatar radius (22) top and bottom */
+  height: 314px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.spend-donut__ring {
+  display: block;
+}
+.spend-donut__centre {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+.spend-donut__caption {
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  color: var(--text-secondary);
+}
+.spend-donut__buddy {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+/* Picking out one person: everything that is not theirs steps back so the
+   slice and its avatar read as the subject, and the centre reports their
+   position instead of the trip total. */
+.spend-donut__arc,
+.spend-donut__buddy {
+  transition: opacity 0.2s var(--ease);
+}
+.spend-donut.is-picking .spend-donut__arc:not(.is-focused),
+.spend-donut.is-picking .spend-donut__buddy:not(.is-focused) {
+  opacity: 0.3;
+}
+.spend-donut__buddy {
+  cursor: default;
+}

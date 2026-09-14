@@ -1,0 +1,29 @@
+.swipe-row {
+  position: relative;
+  overflow: hidden;
+  flex: none;
+}
+.swipe-row__action {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  background: var(--button-destructive);
+  color: #fff;
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+}
+.swipe-row__action:active {
+  filter: brightness(0.92);
+}
+.swipe-row__content {
+  position: relative;
+  transition: transform 0.24s var(--ease);
+  touch-action: pan-y;
+}
+.swipe-row__content.is-sliding {
+  transition: none;
+}

@@ -1,0 +1,201 @@
+.event-card {
+  background: var(--bg-secondary);
+  border-radius: 36px;
+  padding: 8px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: none;
+}
+.event-card__image {
+  height: 140px;
+  border-radius: 28px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 9px;
+}
+.event-time {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.event-time--inline {
+  background: var(--bg-tertiary);
+}
+.event-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 52px;
+}
+.event-card__location {
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+  min-width: 0;
+}
+/* Figma: 25px Bold at 150% -> a 38px box. Beats the .t-title line-height. */
+.event-card__location .event-card__name {
+  line-height: 1.5;
+}
+.event-card__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.event-card__address {
+  /* Figma: Location Description stacks at gap -4, address is 12px at 150% */
+  margin: -4px 0 0;
+  font-size: var(--size-label);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.019em;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.event-card__buttons {
+  display: flex;
+  gap: 8px;
+  padding: 0 7px;
+  flex: none;
+}
+
+.distance-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 18px;
+  flex: none;
+}
+.distance-time__leg {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--size-label);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+  color: var(--text-primary);
+}
+.distance-time__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+}
+
+/* ---- Live poll card ---- */
+.poll-card {
+  background: var(--bg-secondary);
+  border: 2px dashed rgba(201, 94, 66, 0.45);
+  border-radius: 36px;
+  padding: 16px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  flex: none;
+}
+.poll-card:active {
+  transform: scale(0.99);
+}
+.poll-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.poll-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  color: var(--button-accent);
+}
+.poll-card__question {
+  margin: 0;
+}
+.poll-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 2px;
+}
+.poll-card__voters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.poll-card__count {
+  font-size: var(--size-label);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.poll-card__status {
+  font-size: var(--size-label);
+  font-weight: 700;
+  color: var(--button-accent);
+  background: var(--button-accent-selected-disabled);
+  border-radius: var(--radius-pill);
+  padding: 6px 10px;
+  flex: none;
+}
+.poll-card__status.is-done {
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+}
+
+/* ---- Flight leg ---- */
+.flight-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border-radius: 36px;
+  padding: 18px 20px 18px 24px;
+  flex: none;
+}
+.flight-card__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.flight-card__label {
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+.flight-card .event-card__address {
+  margin-top: 0;
+}
+
+/* An event with no photograph keeps the card's shape — the time simply sits
+   where the chip would have sat on the image. */
+.event-card--plain {
+  padding: 12px 8px 16px;
+  gap: 6px;
+}
+.event-card__time {
+  align-self: flex-end;
+  margin-right: 4px;
+}

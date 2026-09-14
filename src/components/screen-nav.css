@@ -1,0 +1,114 @@
+.nav {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.nav__screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* Opaque: without this the two screens see through each other mid-move. */
+  background: var(--bg-primary);
+  /* Self-contained stacking. Screens carry their own z-indexes (the calendar,
+     the tab bar, the header); without isolation those compete across both
+     screens at once and the layers interleave. */
+  isolation: isolate;
+}
+/* Whichever screen is on top of the stack paints above the other. */
+.nav--push .nav__screen--current,
+.nav--pop .nav__screen--leaving {
+  z-index: 2;
+}
+.nav--push .nav__screen--leaving,
+.nav--pop .nav__screen--current {
+  z-index: 1;
+}
+.nav.is-moving .nav__screen {
+  /* two full screens are live for the length of the move */
+  will-change: transform;
+}
+/* while a transition runs the outgoing screen must not take taps */
+.nav.is-moving .nav__screen--leaving {
+  pointer-events: none;
+}
+
+/* The screen on top casts an edge shadow over the one behind it. */
+.nav.is-moving.nav--push .nav__screen--current,
+.nav.is-moving.nav--pop .nav__screen--leaving {
+  box-shadow: -10px 0 30px rgba(19, 19, 19, 0.16);
+}
+
+/* ---- the content travels ---- */
+.nav.is-moving.nav--push .nav__screen--current {
+  animation: nav-in-from-edge var(--nav-duration) var(--nav-ease) both;
+}
+.nav.is-moving.nav--push .nav__screen--leaving {
+  animation: nav-out-to-back var(--nav-duration) var(--nav-ease) both;
+}
+.nav.is-moving.nav--pop .nav__screen--current {
+  animation: nav-in-from-back var(--nav-duration) var(--nav-ease) both;
+}
+.nav.is-moving.nav--pop .nav__screen--leaving {
+  animation: nav-out-to-edge var(--nav-duration) var(--nav-ease) both;
+}
+
+@keyframes nav-in-from-edge {
+  from {
+    transform: translateX(var(--nav-shift));
+  }
+}
+@keyframes nav-out-to-edge {
+  to {
+    transform: translateX(var(--nav-shift));
+  }
+}
+@keyframes nav-out-to-back {
+  to {
+    transform: translateX(calc(var(--nav-back) * -1));
+  }
+}
+@keyframes nav-in-from-back {
+  from {
+    transform: translateX(calc(var(--nav-back) * -1));
+  }
+}
+
+/* ---- the chrome stays put and cross-fades ----
+   Header, its gradient and the tab bar belong to the frame rather than to the
+   page, so they cancel out the screen's travel with an equal counter-move and
+   change state by fading instead of sliding. */
+.nav.is-moving
+  .nav__screen
+  > .screen
+  > :is(.header, .screen__scrim, .tab-bar, .tab-bar-scrim) {
+  animation-duration: var(--nav-duration);
+  animation-timing-function: var(--nav-ease);
+  animation-fill-mode: both;
+}
+.nav.is-moving .nav__screen--current > .screen > :is(.header, .screen__scrim, .tab-bar, .tab-bar-scrim) {
+  animation-name: nav-chrome-in;
+}
+.nav.is-moving .nav__screen--leaving > .screen > :is(.header, .screen__scrim, .tab-bar, .tab-bar-scrim) {
+  animation-name: nav-chrome-out;
+}
+
+/* The chrome changes state by fading rather than by sliding into place. It
+   still rides along with its own screen: holding it still needs it to live
+   outside the screen box that clips it. */
+@keyframes nav-chrome-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes nav-chrome-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    --nav-shift: 100vw;
+  }
+}

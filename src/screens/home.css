@@ -1,0 +1,143 @@
+.screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 16px;
+  overflow: hidden;
+}
+/* Registered so its computed value resolves to a plain length that HomeScreen
+   can read back — unregistered, it would come back as the calc() itself. */
+@property --globe-space-base {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+.home {
+  /* the year subtitle makes this header taller than the trip one */
+  --header-stack: 138px;
+  /* 0 at rest, 1 pulled fully open — everything the gesture moves reads from
+     this one number, so they travel together. */
+  --globe-hero: 0;
+  --globe-space-base: calc(var(--header-stack) + 273px);
+  --globe-top-base: 108px;
+  /* the navigation curve: it leaves quickly and lands hard, which is what
+     makes the snap read as a snap rather than a drift */
+  transition: --globe-hero 0.38s var(--nav-ease);
+}
+/* under the finger it must track exactly, so nothing eases until it is let go */
+.home--pulling {
+  transition: none;
+}
+/* While the globe has the room — open, mid-swipe or on its way back — the list
+   is parked, so the gesture cannot be read as a scroll as well. */
+.home--hero .home__scroll {
+  overflow: hidden;
+}
+.home__profile {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  border: 2px solid var(--bg-secondary);
+  flex: none;
+}
+.home__profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.home__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1;
+}
+/* Holds open the space the globe sits in, so the cards start below it and
+   scroll up over it. It is a real item in the list rather than padding on the
+   list: as padding it belonged to the scroller, which had to be made
+   transparent to pointers wholesale, and the gaps between cards then let drags
+   fall through to the globe instead of scrolling. Only this band passes them
+   on now. The subtracted 12 is the list's own gap, which follows it. */
+.home__globe-space {
+  /* blends from the resting layout to the open one, where HomeScreen has
+     measured the height that puts the first trip on the bottom of the screen */
+  height: calc(
+    var(--globe-space-base) +
+      (var(--globe-space-hero, var(--globe-space-base)) - var(--globe-space-base)) *
+      var(--globe-hero)
+  );
+  flex: none;
+  /* It drives the globe behind it, and stands down once the globe has faded. */
+  pointer-events: var(--globe-hits, auto);
+  cursor: grab;
+  touch-action: none;
+}
+.home__globe-space:active {
+  cursor: grabbing;
+}
+.home__section {
+  margin: 10px 0 0;
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+}
+.home__spacer {
+  height: 32px;
+  flex: none;
+}
+
+.trip-card {
+  position: relative;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: 36px;
+  padding: 20px 22px 22px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  text-align: left;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.14s var(--ease);
+}
+.trip-card:active {
+  transform: scale(0.985);
+}
+.trip-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.trip-card__meta .t-title {
+  display: block;
+}
+.trip-card__meta {
+  min-width: 0;
+}
+.trip-card__dates {
+  display: block;
+  margin: 2px 0 0;
+  font-size: var(--size-label);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+  color: var(--text-secondary);
+}
+.trip-card__open {
+  position: absolute;
+  color: var(--text-primary);
+  right: 22px;
+  bottom: 22px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tertiary);
+}
+

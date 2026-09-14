@@ -1,0 +1,522 @@
+.sheets__label {
+  margin: 0 0 10px;
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+}
+.sheets__empty {
+  margin: 8px 0 0;
+  font-size: var(--size-label-large);
+  color: var(--text-secondary);
+}
+
+/* ---- S04 / S11 Add sheet ---- */
+/* Figma "Add Sheet": 16px side inset and 25px above the tiles, rather than the
+   24px the other sheets use. */
+.add-sheet {
+  --add-gutter: 16px;
+  padding: 25px var(--add-gutter) 24px;
+  /* the tiles row and the list below it */
+  gap: 16px;
+}
+.add-sheet__tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.add-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 91px;
+  padding: 12px 0;
+  border-radius: 15px;
+  /* The one fill in the Figma component with no variable bound to it. */
+  background: var(--surface-tile);
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+}
+.add-tile:active {
+  transform: scale(0.97);
+}
+.add-sheet__list {
+  list-style: none;
+  margin: 0;
+  /* the list is inset a further 9px from the tiles above it */
+  padding: 0 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.add-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 0;
+  text-align: left;
+}
+.add-row__icon {
+  display: grid;
+  place-items: center;
+  width: 33px;
+  height: 30px;
+  flex: none;
+  color: var(--text-primary);
+}
+.add-row__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.add-row__label {
+  font-size: var(--size-body);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+  line-height: 1.5;
+}
+.add-row__hint {
+  font-size: var(--size-label);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ---- S05 / S06 buddies ---- */
+.buddies-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 44px;
+}
+.buddies-sheet__add {
+  position: absolute;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--text-primary);
+}
+.buddies-sheet__add:active {
+  transform: scale(0.95);
+}
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-pill);
+  padding: 16px 20px;
+}
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--size-label-large);
+  font-weight: 500;
+}
+.search-field input::placeholder {
+  color: #9b9890;
+}
+
+/* ---- S07 / S08 poll setup ---- */
+.poll-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ---- S09 / S10 / S20 poll voting ---- */
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.poll-footnote {
+  margin: 0;
+  text-align: center;
+  font-size: var(--size-label-large);
+  font-weight: 400;
+  letter-spacing: -0.019em;
+  color: #717171;
+}
+.poll-results__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- S12 bill total ---- */
+.bill-total__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* only the currency sits in the flow now; the title is centred over it */
+  justify-content: flex-end;
+  gap: 12px;
+  min-height: 44px;
+  flex: none;
+}
+/* The title is centred on the sheet rather than on the space left beside the
+   currency, which is a different width. */
+.bill-total__bar .sheet-heading {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.bill-total__bar .sheet-button {
+  flex: none;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: var(--size-label-large);
+  font-weight: 500;
+}
+.bill-total__currency {
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.bill-total__amount {
+  margin: 6px 0;
+  text-align: center;
+  font-size: 68px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.bill-total__for {
+  margin-top: -4px;
+}
+.bill-total__scan {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* iOS keyboard: edge to edge, flush with the bottom of the device. */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: #d1d3d9;
+  padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
+  flex: none;
+}
+.keypad__key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(19, 19, 19, 0.28);
+}
+.keypad__key--plain {
+  background: transparent;
+  box-shadow: none;
+}
+.keypad__key:active {
+  background: #e6e7ea;
+}
+.keypad__key--plain:active {
+  background: rgba(255, 255, 255, 0.45);
+}
+.keypad__digit {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+.keypad__letters {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+/* ---- S13 / S14 / S15 / S17 ---- */
+.bill-sentence {
+  margin: 0;
+  font-size: var(--size-title);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+.bill-sentence strong {
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.split-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-field);
+  padding: 10px 12px 10px 18px;
+}
+.split-toggle__options {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+}
+.split-toggle__options button {
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--size-label);
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+.split-toggle__options button.is-active {
+  background: var(--text-primary);
+  color: #fff;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* Matches the item rows it sits under. */
+.item-list__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(19, 19, 19, 0.2);
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.item-list__add:active {
+  background: rgba(19, 19, 19, 0.04);
+}
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  /* same box as a poll option — field radius, not a pill */
+  border-radius: var(--radius-field);
+  /* right padding matches the flex gap, so the trailing control sits
+     symmetrically between the divider and the end of the box */
+  padding: 12px 10px 12px 16px;
+  min-height: 58px;
+}
+.item-row__label {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.item-row__amount {
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  width: 62px;
+  text-align: right;
+}
+.item-row__amount-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  flex: none;
+}
+.item-row__amount-input {
+  width: 44px;
+  padding: 0;
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  font-variant-numeric: tabular-nums;
+}
+.item-row__rule {
+  width: 1px;
+  height: 26px;
+  background: rgba(19, 19, 19, 0.18);
+  flex: none;
+}
+.item-row__people {
+  display: flex;
+  align-items: center;
+  /* centred in the space between the divider and the end of the box */
+  justify-content: center;
+  min-width: 66px;
+  flex: none;
+}
+.item-row__stack {
+  display: inline-flex;
+  align-items: center;
+}
+.item-row__stack > * + * {
+  margin-left: -14px;
+}
+.item-row__all {
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding-right: 6px;
+}
+
+/* ---- Breakdown ---- */
+.balance-list {
+  display: flex;
+  flex-direction: column;
+}
+.balance-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+.balance-row + .balance-row {
+  border-top: 1px solid var(--bg-primary);
+}
+.balance-row__name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+}
+.balance-row__you {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-pill);
+  padding: 3px 8px;
+}
+.balance-row__value {
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+.balance-row__value.is-credit {
+  color: var(--button-accent);
+}
+
+.breakdown__note {
+  margin: -6px 0 0;
+  font-size: var(--size-label-large);
+  font-weight: 400;
+  letter-spacing: -0.019em;
+  color: #717171;
+}
+.breakdown__note strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.transfer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.transfer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px 8px 8px;
+  min-height: 50px;
+}
+.transfer-row.is-yours {
+  background: var(--button-accent-selected-disabled);
+  box-shadow: inset 0 0 0 2px var(--button-accent);
+}
+.transfer-row__name {
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+}
+.transfer-row__amount {
+  margin-left: auto;
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* Icon inheritance for sheet controls. */
+.buddies-sheet__add {
+  color: #fff;
+}
+.transfer-row {
+  color: var(--text-secondary);
+}
+.keypad__key {
+  color: var(--text-primary);
+}
+.add-tile {
+  color: var(--text-primary);
+}
+
+/* ---- S07: expandable time rows ---- */
+.poll-meta__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: var(--size-label-large);
+  text-align: left;
+}
+.poll-meta__value {
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.poll-meta__value.is-empty {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.poll-meta__row:active .poll-meta__value {
+  color: var(--button-accent);
+}
+
+
+/* The time sheet matches the height of the sheet below it, so the wheel
+   centres in whatever space is left between the heading and the actions. */
+.poll-time-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 170px;
+}

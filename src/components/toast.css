@@ -1,0 +1,30 @@
+.toast {
+  position: absolute;
+  color: var(--text-primary);
+  left: 20px;
+  right: 20px;
+  top: var(--safe-top);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-pill);
+  padding: 14px 20px;
+  font-size: var(--size-label-large);
+  font-weight: 600;
+  letter-spacing: -0.019em;
+  box-shadow: var(--shadow-float);
+  animation: toast-in 0.26s var(--ease);
+  pointer-events: none;
+}
+.toast svg {
+  color: var(--button-accent);
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+}

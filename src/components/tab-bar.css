@@ -1,0 +1,114 @@
+.tab-bar {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 24px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 5;
+}
+.tab-bar__tabs {
+  position: relative;
+  display: flex;
+  gap: 0;
+  background: var(--bg-secondary);
+  border-radius: 80px;
+  padding: 4px;
+  box-shadow: var(--shadow-float);
+}
+
+/* The selected capsule travels between the tabs rather than cross-fading.
+   The curve overshoots slightly and settles, and the fill stretches along the
+   direction of travel while it moves — the iOS 26 tab bar's liquid feel. */
+.tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 112px;
+  height: 54px;
+  pointer-events: none;
+  transform: translateX(calc(var(--tab-index, 0) * 112px));
+  transition: transform 0.46s cubic-bezier(0.32, 1.4, 0.46, 1);
+}
+.tab-indicator__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 93px;
+  background: var(--bg-tertiary);
+  transform: scaleX(1);
+  /* relaxing back shares the capsule's curve, so the two settle together */
+  transition: transform 0.46s cubic-bezier(0.32, 1.4, 0.46, 1);
+}
+.tab-indicator.is-moving .tab-indicator__fill {
+  transform: scaleX(1.12);
+  transition: transform 0.19s var(--ease);
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 112px;
+  height: 54px;
+  border-radius: 93px;
+  color: var(--text-primary);
+  transition: color 0.22s var(--ease);
+}
+.tab span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: -0.019em;
+}
+.tab.is-active {
+  color: var(--button-accent);
+}
+.tab.is-active span {
+  font-weight: 700;
+}
+/* the icon gives a small pop as its tab takes the capsule */
+.tab.is-active svg {
+  animation: tab-pop 0.44s var(--ease);
+}
+@keyframes tab-pop {
+  0% {
+    transform: scale(1);
+  }
+  38% {
+    transform: scale(1.16);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.tab-bar__add {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  width: 62px;
+  height: 62px;
+  border-radius: 80px;
+  background: var(--button-add);
+  box-shadow: var(--shadow-float);
+}
+.tab-bar__add:active {
+  transform: scale(0.94);
+}
+
+/* Gradient that fades content behind the floating tab bar. */
+.tab-bar-scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 124px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(233, 230, 225, 0) 0%, var(--bg-primary) 62%);
+  z-index: 4;
+}

@@ -1,0 +1,74 @@
+.transaction-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: none;
+}
+.transaction-group__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+.transaction-group__label {
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+}
+.transaction-group__body {
+  background: var(--bg-secondary);
+  border-radius: 36px;
+  padding: 6px 0 4px;
+  /* keeps swiped rows inside the card's rounded corners */
+  overflow: hidden;
+}
+.transaction-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 24px;
+  min-height: 65px;
+}
+.transaction-row + .transaction-row,
+.swipe-row + .swipe-row .transaction-row {
+  border-top: 1px solid var(--bg-primary);
+}
+.transaction-row__left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.transaction-row__title {
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.transaction-row__subtitle {
+  font-size: var(--size-label);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.transaction-row__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex: none;
+}
+.transaction-row__amount {
+  font-size: var(--size-label-large);
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  font-variant-numeric: tabular-nums;
+}
+.transaction-row__amount.is-owed {
+  color: var(--button-accent);
+}
+.transaction-row__caption {
+  font-size: var(--size-label);
+  font-weight: 500;
+  color: var(--text-secondary);
+}

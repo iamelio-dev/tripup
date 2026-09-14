@@ -1,0 +1,58 @@
+.avatar {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: var(--radius-pill);
+  border-style: solid;
+  border-color: var(--bg-secondary);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  user-select: none;
+}
+.avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatar--ring {
+  border-width: 2.5px;
+}
+.avatar--more {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+.avatar.is-dimmed {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+.buddies-preview {
+  display: inline-flex;
+  align-items: center;
+}
+.buddies-preview-button {
+  display: inline-flex;
+}
+/* same press reaction as the other header buttons */
+.buddies-preview-button:active {
+  transform: scale(0.94);
+}
+
+/* Buddies Preview dealing itself out: every avatar starts stacked on the first
+   one, then slides to its place — the single profile image on Home becoming
+   the group. The first stays put and only fades, so it reads as the anchor. */
+.buddies-preview__item.is-fanning {
+  animation: buddy-fan-in 0.44s var(--nav-ease) both;
+  animation-delay: calc(var(--buddy-i, 0) * 55ms);
+}
+@keyframes buddy-fan-in {
+  from {
+    transform: translateX(calc(var(--buddy-i, 0) * var(--buddy-advance, 20px) * -1))
+      scale(0.82);
+    opacity: 0;
+  }
+}

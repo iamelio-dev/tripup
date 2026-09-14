@@ -1,0 +1,51 @@
+.calendar-strip {
+  display: flex;
+  gap: 4px;
+  height: 73px;
+  flex: none;
+  /* a fortnight's worth of days will not fit the row — let it scroll */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.calendar-strip::-webkit-scrollbar {
+  display: none;
+}
+.calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* a week's worth shares the row; a longer trip keeps them legible and
+     scrolls instead of squeezing */
+  flex: 1 0 48px;
+  height: 73px;
+  border-radius: 16px;
+  color: var(--text-secondary);
+  /* the selection fades out of one day and into the next */
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.calendar-day__weekday {
+  font-size: var(--size-label);
+  font-weight: 500;
+  letter-spacing: -0.019em;
+}
+.calendar-day__number {
+  font-size: var(--size-body);
+  font-weight: 800;
+  letter-spacing: -0.019em;
+  color: var(--text-primary);
+  /* carries its own colour, so it needs the fade too */
+  transition: color 0.2s var(--ease);
+}
+/* Today reads as a light chip until it becomes the selected day. */
+.calendar-day.is-today:not(.is-selected) {
+  background: var(--bg-secondary);
+}
+.calendar-day.is-selected {
+  background: var(--button-accent);
+}
+.calendar-day.is-selected .calendar-day__weekday,
+.calendar-day.is-selected .calendar-day__number {
+  color: #fff;
+}

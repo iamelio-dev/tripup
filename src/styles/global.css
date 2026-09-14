@@ -1,0 +1,209 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #ffffff;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/* ---------- Device frame ---------- */
+.stage {
+  min-height: 100%;
+  display: grid;
+  /* "safe" so a short window scrolls instead of clipping the top of the frame */
+  place-content: safe center;
+  justify-items: center;
+  padding: 16px;
+}
+
+/* Device frame art is 900x1840 (@2x) with an 804x1748 screen cut-out at (48, 46).
+   Sized so the cut-out lands exactly on the 393x852 viewport. */
+.device {
+  position: relative;
+  width: 439.93px;
+  height: 896.84px;
+  filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.35));
+}
+
+.device__bezel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.phone {
+  position: absolute;
+  left: 23.46px;
+  top: 22.42px;
+  /* an app, not a document — only fields are selectable */
+  user-select: none;
+  -webkit-user-select: none;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  border-radius: 54px;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.phone input,
+.phone textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* while a drag-scroll is in flight nothing should look clickable */
+body.is-drag-scrolling,
+body.is-drag-scrolling * {
+  cursor: grabbing !important;
+}
+
+.phone__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Phone-sized viewport — drop the frame and run edge to edge. */
+@media (max-width: 480px) {
+  .stage {
+    padding: 0;
+  }
+  .device {
+    width: 100vw;
+    height: 100dvh;
+    filter: none;
+  }
+  .device__bezel {
+    display: none;
+  }
+  .phone {
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+}
+
+/* ---------- Typography ---------- */
+.t-hero {
+  font-size: var(--size-hero);
+  /* Figma: 34 / Bold / -1.9% — same style for the trip name and the ring total */
+  font-weight: 700;
+  letter-spacing: -0.019em;
+  line-height: 1.1;
+  margin: 0;
+}
+.t-title {
+  font-size: var(--size-title);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 0;
+}
+.t-body {
+  font-size: var(--size-body);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.t-label-lg {
+  font-size: var(--size-label-large);
+  font-weight: 500;
+  margin: 0;
+}
+.t-label {
+  font-size: var(--size-label);
+  font-weight: 600;
+  margin: 0;
+}
+.muted {
+  color: var(--text-secondary);
+}
+
+/* ---------- Scroll area ---------- */
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  /* Keep the rubber-band, but don't let it chain out to the page. */
+  overscroll-behavior: contain;
+}
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* The header floats over the scroll. This fades content passing underneath it
+   instead of letting it cut off hard — the mirror of .tab-bar-scrim.
+   Screens that park something else up there (the itinerary calendar) raise
+   --scrim-height so the gradient sits behind that too. */
+.screen__scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* stops where content sits at rest, so nothing is veiled until it scrolls */
+  height: var(--scrim-height, calc(var(--header-stack) + 16px));
+  pointer-events: none;
+  /* A transparent keyword would fade through grey, so fade the colour itself.
+     The extra stops ease the ramp — a straight two-stop fade still reads as an
+     edge against a photo. */
+  background: linear-gradient(
+    180deg,
+    var(--bg-primary) 0%,
+    var(--bg-primary) calc(100% - var(--scrim-fade)),
+    rgba(233, 230, 225, 0.92) calc(100% - var(--scrim-fade) * 0.72),
+    rgba(233, 230, 225, 0.7) calc(100% - var(--scrim-fade) * 0.48),
+    rgba(233, 230, 225, 0.34) calc(100% - var(--scrim-fade) * 0.24),
+    rgba(233, 230, 225, 0) 100%
+  );
+  z-index: 4;
+}
+.screen > .header {
+  position: absolute;
+  top: var(--safe-top);
+  left: 16px;
+  right: 16px;
+  z-index: 6;
+}
+/* Scroll areas that run up underneath the header. The 16px keeps the gap the
+   header used to get from the screen's flex gap. */
+.scroll--under-header {
+  padding-top: calc(var(--header-stack) + 16px);
+}
