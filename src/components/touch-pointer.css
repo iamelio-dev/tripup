@@ -1,0 +1,39 @@
+/* The arrow is hidden wherever the touch dot stands in for it. Wins over the
+   grabbing cursor the drag-scroll puts up, which is !important and so is
+   settled on specificity. */
+.stage .phone,
+.stage .phone * {
+  cursor: none !important;
+}
+
+.touch-pointer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  /* centred on the pointer, so transform can carry the position alone */
+  margin: -17px 0 0 -17px;
+  border-radius: var(--radius-pill);
+  background: rgba(19, 19, 19, 0.14);
+  border: 1.5px solid rgba(19, 19, 19, 0.26);
+  /* it stands in for the pointer — it must never catch one */
+  pointer-events: none;
+  opacity: 0;
+  /* above the phone and its frame */
+  z-index: 100;
+  /* scale rather than transform: the position owns that */
+  scale: 1;
+  transition:
+    opacity 0.12s var(--ease),
+    scale 0.09s var(--ease),
+    background-color 0.09s var(--ease);
+}
+.touch-pointer.is-on {
+  opacity: 1;
+}
+/* the press reads as a fingertip flattening against the glass */
+.touch-pointer.is-pressed {
+  scale: 0.82;
+  background: rgba(19, 19, 19, 0.26);
+}

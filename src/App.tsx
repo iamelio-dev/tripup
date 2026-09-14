@@ -7,6 +7,7 @@ import { TripScreen } from './screens/TripScreen'
 import { NotificationsScreen } from './screens/NotificationsScreen'
 import { Toast } from './components/Toast'
 import { ScreenNav } from './components/ScreenNav'
+import { TouchPointer } from './components/TouchPointer'
 
 export default function App() {
   const phone = useRef<HTMLDivElement>(null)
@@ -35,6 +36,9 @@ export default function App() {
           {/* the frame art carries the status bar: time, island, indicators */}
           <img className="device__bezel" src="/assets/device-bezel.png" alt="" aria-hidden="true" />
         </div>
+        {/* outside the frame, which has a filter on it — that would make a fixed
+            child position against the frame rather than the window */}
+        <TouchPointer within={phone} />
       </div>
     </StoreProvider>
   )
