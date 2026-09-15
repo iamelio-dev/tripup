@@ -36,8 +36,9 @@ export default function App() {
           {/* the frame art carries the status bar: time, island, indicators */}
           <img className="device__bezel" src="/assets/device-bezel.png" alt="" aria-hidden="true" />
         </div>
-        {/* outside the frame, which has a filter on it — that would make a fixed
-            child position against the frame rather than the window */}
+        {/* Both sit outside the frame, which has a filter on it — that would
+            make a fixed child position against the frame rather than the window. */}
+        <img className="stage__logo" src="/assets/tripup-logo.png" alt="TripUp" />
         <TouchPointer within={phone} />
       </div>
     </StoreProvider>

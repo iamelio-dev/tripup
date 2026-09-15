@@ -1,15 +1,16 @@
 import { EVENT_IMAGES } from '../components/EventCard'
 import { PEOPLE, TRIPS } from '../data/seed'
 
-/** The phone frame — on screen from the first paint, so it is never deferred. */
+/** On screen from the first paint, so never deferred. */
 const BEZEL = '/assets/device-bezel.png'
+const LOGO = '/assets/tripup-logo.png'
 
 /**
  * What the home screen shows straight away: the frame, everyone's face on the
  * trip cards, and the photo each trip puts on its globe pin.
  */
 function firstScreen() {
-  const urls = new Set<string>([BEZEL])
+  const urls = new Set<string>([BEZEL, LOGO])
   // not everyone has one — Avatar falls back to a tone
   Object.values(PEOPLE).forEach((person) => person.photo && urls.add(person.photo))
   TRIPS.forEach((trip) => {

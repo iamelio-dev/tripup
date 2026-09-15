@@ -108,6 +108,15 @@ body.is-drag-scrolling * {
   flex-direction: column;
 }
 
+/* Sits on the page the phone is shown on, not on the phone. */
+.stage__logo {
+  position: fixed;
+  left: 40px;
+  bottom: 40px;
+  width: 150px;
+  height: auto;
+}
+
 /* Phone-sized viewport — drop the frame and run edge to edge. */
 @media (max-width: 480px) {
   .stage {
@@ -127,6 +136,10 @@ body.is-drag-scrolling * {
     width: 100vw;
     height: 100dvh;
     border-radius: 0;
+  }
+  /* there is no page left to put it on — the app has the whole screen */
+  .stage__logo {
+    display: none;
   }
 }
 
