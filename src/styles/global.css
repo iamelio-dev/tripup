@@ -111,7 +111,7 @@ body.is-drag-scrolling * {
 /* Sits on the page the phone is shown on, not on the phone. */
 .stage__logo {
   position: fixed;
-  left: 40px;
+  right: 40px;
   bottom: 40px;
   width: 150px;
   height: auto;
